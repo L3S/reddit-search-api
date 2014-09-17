@@ -13,6 +13,47 @@
     </license>
   </licenses>
 
+  <contributors>
+    <contributor>
+      <name>Gerhard Gossen</name>
+      <email>gossen@l3s.de</email>
+    </contributor>
+  </contributors>
+
+  <organization>
+    <name>L3S Research Center</name>
+    <url>http://www.l3s.de</url>
+  </organization>
+
+  <repositories>
+    <repository>
+      <id>icrawl-releases</id>
+      <url>http://maven.l3s.uni-hannover.de:9088/nexus/content/repositories/icrawl_release/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>icrawl-snapshots</id>
+      <url>http://maven.l3s.uni-hannover.de:9088/nexus/content/repositories/icrawl_snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
+
+
+  <distributionManagement>
+    <repository>
+      <id>icrawl-releases</id>
+      <url>http://maven.l3s.uni-hannover.de:9088/nexus/content/repositories/icrawl_release/</url>
+    </repository>
+    <snapshotRepository>
+      <id>icrawl-snapshots</id>
+      <url>http://maven.l3s.uni-hannover.de:9088/nexus/content/repositories/icrawl_snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
@@ -54,4 +95,8 @@
     </dependency>
   </dependencies>
 
+  <scm>
+    <url>https://github.com/L3S/reddit-search-api</url>
+    <developerConnection>scm:git:git@github.com:L3S/reddit-search-api.git</developerConnection>
+  </scm>
 </project>
