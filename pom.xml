@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.l3s.icrawl</groupId>
   <artifactId>reddit-search-api</artifactId>
-  <version>0.1</version>
+  <version>0.2-SNAPSHOT</version>
   <name>Reddit Search API</name>
 
   <licenses>
