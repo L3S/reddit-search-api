@@ -6,10 +6,17 @@ Simple wrapper for the [Reddit search API](http://www.reddit.com/dev/api#GET_sea
 
 Include this as a Maven dependency:
 
+    <repositories>
+      <repository>
+        <id>icrawl-releases</id>
+        <url>http://maven.l3s.uni-hannover.de:9088/nexus/content/repositories/icrawl_release/</url>
+      </repository>
+    </repositories>
+    <!-- ... -->
     <dependency>
       <groupId>de.l3s.icrawl</groupId>
       <artifactId>reddit-search-api</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.1</version>
     </dependency>
 
 Create a new instance and start queries:
