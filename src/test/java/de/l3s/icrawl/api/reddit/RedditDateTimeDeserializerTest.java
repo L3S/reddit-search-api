@@ -1,9 +1,9 @@
-package de.l3s.icrawl.reddit;
+package de.l3s.icrawl.api.reddit;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import de.l3s.icrawl.reddit.RedditDateTimeDeserializer;
+import de.l3s.icrawl.api.reddit.RedditDateTimeDeserializer;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertThat;

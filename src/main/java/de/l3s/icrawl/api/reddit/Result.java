@@ -1,4 +1,4 @@
-package de.l3s.icrawl.reddit;
+package de.l3s.icrawl.api.reddit;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;

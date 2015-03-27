@@ -1,4 +1,4 @@
-package de.l3s.icrawl.reddit;
+package de.l3s.icrawl.api.reddit;
 
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package de.l3s.icrawl.reddit;
+package de.l3s.icrawl.api.reddit;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -23,8 +23,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.l3s.icrawl.reddit.RedditDateTimeDeserializer.RedditJodaModule;
-
+import de.l3s.icrawl.api.reddit.RedditDateTimeDeserializer.RedditJodaModule;
 import static com.fasterxml.jackson.databind.PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES;
 import static java.nio.charset.StandardCharsets.UTF_8;
 

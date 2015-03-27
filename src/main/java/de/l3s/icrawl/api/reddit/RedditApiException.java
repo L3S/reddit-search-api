@@ -1,4 +1,4 @@
-package de.l3s.icrawl.reddit;
+package de.l3s.icrawl.api.reddit;
 
 public class RedditApiException extends RuntimeException {
     private static final long serialVersionUID = 1L;

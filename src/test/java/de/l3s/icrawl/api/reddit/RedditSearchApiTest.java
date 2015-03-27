@@ -1,4 +1,4 @@
-package de.l3s.icrawl.reddit;
+package de.l3s.icrawl.api.reddit;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,8 +6,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import de.l3s.icrawl.reddit.RedditSearchApi.Sort;
-
+import de.l3s.icrawl.api.reddit.Link;
+import de.l3s.icrawl.api.reddit.Listing;
+import de.l3s.icrawl.api.reddit.RedditSearchApi;
+import de.l3s.icrawl.api.reddit.ResultWrapper;
+import de.l3s.icrawl.api.reddit.RedditSearchApi.Sort;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
