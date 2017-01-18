@@ -19,13 +19,13 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.l3s.icrawl.api.reddit.RedditDateTimeDeserializer.RedditJodaModule;
 import static com.fasterxml.jackson.databind.PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES;
 import static java.nio.charset.StandardCharsets.UTF_8;
+
+import de.l3s.icrawl.api.reddit.RedditDateTimeDeserializer.RedditJodaModule;
 
 /**
  * Interface to the Reddit search API.
@@ -52,7 +52,8 @@ public class RedditSearchApi implements Closeable {
 
     public RedditSearchApi() {
         this.mapper = new ObjectMapper().registerModule(new RedditJodaModule())
-            .setPropertyNamingStrategy(CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+            .setPropertyNamingStrategy(CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         String jsonMimeType = ContentType.APPLICATION_JSON.withCharset(UTF_8).getMimeType();
         this.client = HttpClientBuilder.create()
             .setUserAgent("iCrawl")
@@ -122,13 +123,11 @@ public class RedditSearchApi implements Closeable {
         }
     }
 
-    protected ResultWrapper parse(String json) throws IOException, JsonParseException,
-            JsonMappingException {
+    protected ResultWrapper parse(String json) throws IOException {
         return mapper.readValue(json, ResultWrapper.class);
     }
 
-    protected ResultWrapper parse(InputStream is) throws IOException, JsonParseException,
-            JsonMappingException {
+    protected ResultWrapper parse(InputStream is) throws IOException {
         return mapper.readValue(is, ResultWrapper.class);
     }
 

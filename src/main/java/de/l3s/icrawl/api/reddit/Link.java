@@ -25,7 +25,7 @@ public class Link extends Result {
     private String domain;
     private int downs;
     @Nullable
-    private DateTime edited;
+    private String edited;
     private int gilded;
     private boolean hidden;
     private String id;
@@ -45,7 +45,7 @@ public class Link extends Result {
     private String reportReasons;
     private boolean saved;
     private int score;
-    private String secureMedia;
+    //    private String secureMedia;
     private Map<String, Object> secureMediaEmbed;
     private String selftext;
     private String selftextHtml;
@@ -102,7 +102,7 @@ public class Link extends Result {
         return downs;
     }
 
-    public DateTime getEdited() {
+    public String getEdited() {
         return edited;
     }
 
@@ -175,9 +175,9 @@ public class Link extends Result {
         return score;
     }
 
-    public String getSecureMedia() {
-        return secureMedia;
-    }
+    //    public String getSecureMedia() {
+    //        return secureMedia;
+    //    }
 
     public Map<String, Object> getSecureMediaEmbed() {
         return secureMediaEmbed;
@@ -267,7 +267,7 @@ public class Link extends Result {
         this.downs = downs;
     }
 
-    void setEdited(DateTime edited) {
+    void setEdited(String edited) {
         this.edited = edited;
     }
 
@@ -339,9 +339,9 @@ public class Link extends Result {
         this.score = score;
     }
 
-    void setSecureMedia(String secureMedia) {
-        this.secureMedia = secureMedia;
-    }
+    //    void setSecureMedia(String secureMedia) {
+    //        this.secureMedia = secureMedia;
+    //    }
 
     void setSecureMediaEmbed(Map<String, Object> secureMediaEmbed) {
         this.secureMediaEmbed = secureMediaEmbed;
