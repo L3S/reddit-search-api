@@ -25,8 +25,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import static com.fasterxml.jackson.databind.PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import de.l3s.icrawl.api.reddit.RedditDateTimeDeserializer.RedditJodaModule;
-
 /**
  * Interface to the Reddit search API.
  *
@@ -38,7 +36,7 @@ public class RedditSearchApi implements Closeable {
         RELEVANCE("relevance"), NEW("new"), HOT("hot"), TOP("top"), COMMENTS("comments");
         private final String param;
 
-        Sort(String param){
+        Sort(String param) {
             this.param = param;
         }
 
@@ -46,16 +44,19 @@ public class RedditSearchApi implements Closeable {
             return param;
         }
     }
+
     private static final String SEARCH_URI = "http://www.reddit.com/search.json";
     private final ObjectMapper mapper;
     private final CloseableHttpClient client;
 
     public RedditSearchApi() {
-        this.mapper = new ObjectMapper().registerModule(new RedditJodaModule())
+        this.mapper = new ObjectMapper()
+            .registerModule(new RedditDateTimeModule())
             .setPropertyNamingStrategy(CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES)
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         String jsonMimeType = ContentType.APPLICATION_JSON.withCharset(UTF_8).getMimeType();
-        this.client = HttpClientBuilder.create()
+        this.client = HttpClientBuilder
+            .create()
             .setUserAgent("iCrawl")
             .setDefaultHeaders(Arrays.asList(new BasicHeader(HttpHeaders.ACCEPT, jsonMimeType)))
             .build();
@@ -82,8 +83,8 @@ public class RedditSearchApi implements Closeable {
      * @return a (possibly) empty list of results
      */
     public List<Link> search(String query, int numResults, Sort sort) {
-        if(numResults <= 0 || numResults > 100) {
-            throw new IllegalArgumentException("Number of requested results must be in (0,100], got "+ numResults);
+        if (numResults <= 0 || numResults > 100) {
+            throw new IllegalArgumentException("Number of requested results must be in (0,100], got " + numResults);
         }
         if (query.trim().isEmpty()) {
             throw new IllegalArgumentException("Got empty query");
@@ -92,7 +93,8 @@ public class RedditSearchApi implements Closeable {
             throw new IllegalArgumentException("Query to long, must be less than 512 characters, got " + query.length());
         }
         try {
-            String uri = new URIBuilder(SEARCH_URI).addParameter("q", query)
+            String uri = new URIBuilder(SEARCH_URI)
+                .addParameter("q", query)
                 .addParameter("limit", String.valueOf(numResults))
                 .addParameter("sort", sort.getParam())
                 .toString();
@@ -100,8 +102,8 @@ public class RedditSearchApi implements Closeable {
 
             try (CloseableHttpResponse response = client.execute(get)) {
                 if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                    throw new RedditApiException("Failed to query for '" + query
-                            + "', server returned: " + response.getStatusLine().getStatusCode());
+                    throw new RedditApiException(
+                        "Failed to query for '" + query + "', server returned: " + response.getStatusLine().getStatusCode());
                 }
                 HttpEntity entity = response.getEntity();
                 Result result = parse(entity.getContent()).getData();

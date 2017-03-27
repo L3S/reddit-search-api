@@ -1,11 +1,11 @@
 package de.l3s.icrawl.api.reddit;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
-
-import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -19,8 +19,8 @@ public class Link extends Result {
     @Nullable
     private String bannedBy;
     private boolean clicked;
-    private DateTime created;
-    private DateTime createdUtc;
+    private OffsetDateTime created;
+    private Instant createdUtc;
     private String distinguished;
     private String domain;
     private int downs;
@@ -82,11 +82,11 @@ public class Link extends Result {
         return clicked;
     }
 
-    public DateTime getCreated() {
+    public OffsetDateTime getCreated() {
         return created;
     }
 
-    public DateTime getCreatedUtc() {
+    public Instant getCreatedUtc() {
         return createdUtc;
     }
 
@@ -247,11 +247,11 @@ public class Link extends Result {
         this.clicked = clicked;
     }
 
-    void setCreated(DateTime created) {
+    void setCreated(OffsetDateTime created) {
         this.created = created;
     }
 
-    void setCreatedUtc(DateTime createdUtc) {
+    void setCreatedUtc(Instant createdUtc) {
         this.createdUtc = createdUtc;
     }
 
