@@ -1,22 +1,20 @@
 package de.l3s.icrawl.api.reddit;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -31,7 +29,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * Accesses the Reddit search API through the provided JSON interface and
  * extracts the returned results.
  */
-public class RedditSearchApi implements Closeable {
+public class RedditSearchApi {
+
     public enum Sort {
         RELEVANCE("relevance"), NEW("new"), HOT("hot"), TOP("top"), COMMENTS("comments");
         private final String param;
@@ -46,20 +45,17 @@ public class RedditSearchApi implements Closeable {
     }
 
     private static final String SEARCH_URI = "http://www.reddit.com/search.json";
+    private static final Header ACCEPT_HEADER = new BasicHeader(HttpHeaders.ACCEPT,
+        ContentType.APPLICATION_JSON.withCharset(UTF_8).getMimeType());
     private final ObjectMapper mapper;
-    private final CloseableHttpClient client;
+    private final HttpClient client;
 
-    public RedditSearchApi() {
+    public RedditSearchApi(HttpClient client) {
         this.mapper = new ObjectMapper()
             .registerModule(new RedditDateTimeModule())
             .setPropertyNamingStrategy(CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES)
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        String jsonMimeType = ContentType.APPLICATION_JSON.withCharset(UTF_8).getMimeType();
-        this.client = HttpClientBuilder
-            .create()
-            .setUserAgent("iCrawl")
-            .setDefaultHeaders(Arrays.asList(new BasicHeader(HttpHeaders.ACCEPT, jsonMimeType)))
-            .build();
+        this.client = client;
     }
 
     /* Unhandled parameters: after, before, count, restrict_sr, syntax, t   */
@@ -99,26 +95,26 @@ public class RedditSearchApi implements Closeable {
                 .addParameter("sort", sort.getParam())
                 .toString();
             HttpGet get = new HttpGet(uri);
+            get.addHeader(ACCEPT_HEADER);
 
-            try (CloseableHttpResponse response = client.execute(get)) {
-                if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                    throw new RedditApiException(
-                        "Failed to query for '" + query + "', server returned: " + response.getStatusLine().getStatusCode());
-                }
-                HttpEntity entity = response.getEntity();
-                Result result = parse(entity.getContent()).getData();
-                if (result instanceof Listing) {
-                    Listing listing = (Listing) result;
-                    List<Link> links = new ArrayList<>(listing.getChildren().size());
-                    for (ResultWrapper wrapper : listing.getChildren()) {
-                        if (wrapper.getData() instanceof Link) {
-                            links.add((Link) wrapper.getData());
-                        }
+            HttpResponse response = client.execute(get);
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                throw new RedditApiException(
+                    "Failed to query for '" + query + "', server returned: " + response.getStatusLine().getStatusCode());
+            }
+            HttpEntity entity = response.getEntity();
+            Result result = parse(entity.getContent()).getData();
+            if (result instanceof Listing) {
+                Listing listing = (Listing) result;
+                List<Link> links = new ArrayList<>(listing.getChildren().size());
+                for (ResultWrapper wrapper : listing.getChildren()) {
+                    if (wrapper.getData() instanceof Link) {
+                        links.add((Link) wrapper.getData());
                     }
-                    return links;
-                } else {
-                    throw new RedditApiException("Unexpected result type: " + result);
                 }
+                return links;
+            } else {
+                throw new RedditApiException("Unexpected result type: " + result);
             }
         } catch (URISyntaxException | IOException e) {
             throw new RedditApiException("Exception while searching for '" + query + "'", e);
@@ -131,10 +127,5 @@ public class RedditSearchApi implements Closeable {
 
     protected ResultWrapper parse(InputStream is) throws IOException {
         return mapper.readValue(is, ResultWrapper.class);
-    }
-
-    @Override
-    public void close() throws IOException {
-        client.close();
     }
 }
